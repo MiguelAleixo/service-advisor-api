@@ -11,5 +11,6 @@ const procs = {
 async function getServices(obj) {
     return pg.request(global.sql)
         .input('pIdUser', obj.id)
+        .input('pIdCategory', obj.idCategory)
         .asyncExec(procs.getServices);
 }

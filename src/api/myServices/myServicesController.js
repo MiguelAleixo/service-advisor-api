@@ -22,6 +22,22 @@ async function getMyServices(req, res) {
 
 async function registerMyServices(req, res) {
     try {
+
+        switch (req.body.idCategoria) {
+            case 1:
+                req.body.img = 'https://www.hojeemdia.com.br/polopoly_fs/1.588863!/image/image.jpg_gen/derivatives/landscape_653/image.jpg'
+                break;
+            case 2:
+                req.body.img = 'https://institutouniversal.vteximg.com.br/arquivos/ids/157070-1000-1000/image_mestre_obras.jpg?v=635369631791130000'
+                break;
+            case 3:
+                req.body.img = 'https://cdn.mamamia.com.au/wp/wp-content/uploads/2019/02/04120205/makeup-pilling.jpg'
+                break;
+            case 4:
+                req.body.img = 'https://cptstatic.s3.amazonaws.com/imagens/enviadas/materias/materia6218/tarefas-das-empregadas-domesticas-cursos-cpt.jpg'
+                break;
+        }
+
         let rtn = await repository.registerMyServices(req.params.id, req.body);
 
         if (rtn.executionCode !== 0)
@@ -35,6 +51,22 @@ async function registerMyServices(req, res) {
 
 async function changeMyServices(req, res) {
     try {
+
+        switch (req.body.idCategoria) {
+            case 1:
+                req.body.img = 'https://www.hojeemdia.com.br/polopoly_fs/1.588863!/image/image.jpg_gen/derivatives/landscape_653/image.jpg'
+                break;
+            case 2:
+                req.body.img = 'https://institutouniversal.vteximg.com.br/arquivos/ids/157070-1000-1000/image_mestre_obras.jpg?v=635369631791130000'
+                break;
+            case 3:
+                req.body.img = 'https://cdn.mamamia.com.au/wp/wp-content/uploads/2019/02/04120205/makeup-pilling.jpg'
+                break;
+            case 4:
+                req.body.img = 'https://cptstatic.s3.amazonaws.com/imagens/enviadas/materias/materia6218/tarefas-das-empregadas-domesticas-cursos-cpt.jpg'
+                break;
+        }
+        
         let rtn = await repository.changeMyServices(req.params.id, req.body);
 
         if (rtn.executionCode !== 0)

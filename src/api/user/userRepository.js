@@ -9,6 +9,7 @@ const procs = {
 };
 
 async function authUser(obj) {
+    console.log('autentica', obj)
     return pg.request(global.sql)
         .input('pLogin', obj.login)
         .input('pSenha', obj.password)
