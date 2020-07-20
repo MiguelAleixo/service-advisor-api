@@ -4,7 +4,8 @@ module.exports = {
     getMyServices,
     registerMyServices,
     changeMyServices,
-    removeMyServices
+    removeMyServices,
+    changeMySolicitationStatus
 };
 
 async function getMyServices(req, res) {
@@ -82,6 +83,18 @@ async function removeMyServices(req, res) {
     try {
         let rtn = await repository.removeMyServices(req.params.id);
 
+        if (rtn.executionCode !== 0)
+            return res.status(200).json(rtn);
+
+        res.json(rtn);
+    } catch (err) {
+        return res.status(404).json({ err })
+    }
+}
+
+async function changeMySolicitationStatus(req, res) {
+    try {
+        let rtn = await repository.changeMySolicitationStatus(req.params.id, req.body);
         if (rtn.executionCode !== 0)
             return res.status(200).json(rtn);
 

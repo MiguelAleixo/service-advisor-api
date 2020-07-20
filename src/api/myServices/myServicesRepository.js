@@ -5,13 +5,15 @@ module.exports = {
     registerMyServices,
     changeMyServices,
     removeMyServices,
+    changeMySolicitationStatus
 };
 
 const procs = {
     getMyServices: 'public.selectMyService',
     registerMyServices: 'public.registerMyService',
     changeMyServices: 'public.updateMyService',
-    removeMyServices: 'public.deleteMyService'
+    removeMyServices: 'public.deleteMyService',
+    changeMySolicitationStatus: 'public.updateSolicitation'
 };
 
 async function getMyServices(obj) {
@@ -48,4 +50,12 @@ async function removeMyServices(id) {
     return pg.request(global.sql)
         .input('pIdService', id)
         .asyncExec(procs.removeMyServices);
+}
+
+async function changeMySolicitationStatus(id, obj) {
+    return pg.request(global.sql)
+        .input('pIdSolicitation', id)
+        .input('pIdStatus', obj.idStatus)
+
+        .asyncExec(procs.changeMySolicitationStatus);
 }
