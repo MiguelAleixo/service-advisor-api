@@ -3,13 +3,15 @@ const pg = require('../../helpers/postgres');
 module.exports = {
     getServices,
     getSolicitationService,
-    solicitService
+    solicitService,
+    finishSolicitation
 };
 
 const procs = {
     getServices: 'public.selectService',
     getSolicitationService: 'public.selectMySolicitation',
-    solicitService: 'public.registerSolicitation'
+    solicitService: 'public.registerSolicitation',
+    finishSolicitation: 'public.finishSolicitation'
 };
 
 async function getServices(obj) {
@@ -31,4 +33,11 @@ async function solicitService(id, obj) {
     .input('pIdServico', obj.idService)
     .input('pMensagem', obj.message)
     .asyncExec(procs.solicitService);
+}
+
+async function finishSolicitation(id, obj) {
+    return pg.request(global.sql)
+    .input('pIdSolicitation', id)
+    .input('pAvaliation', obj.avaliation)
+    .asyncExec(procs.finishSolicitation);
 }

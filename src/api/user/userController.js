@@ -5,7 +5,6 @@ module.exports = {
 };
 
 async function authUser(req, res) {
-    console.log('autentica')
     try {
         let rtn = await repository.authUser(req.body);
 

@@ -3,7 +3,8 @@ const repository = require('./servicesRepository');
 module.exports = {
     getServices,
     getSolicitationService,
-    solicitService
+    solicitService,
+    finishSolicitation
 };
 
 async function getServices(req, res) {
@@ -21,7 +22,7 @@ async function getServices(req, res) {
 
 async function getSolicitationService(req, res) {
     try {
-        let rtn = await repository.getSolicitationService(req.params);
+        let rtn = await repository.getSolicitationService(req.params) || {};
 
         if (rtn.executionCode !== 0)
             return res.status(200).json(rtn);
@@ -35,6 +36,19 @@ async function getSolicitationService(req, res) {
 async function solicitService(req, res) {
     try {
         let rtn = await repository.solicitService(req.params.id, req.body);
+
+        if (rtn.executionCode !== 0)
+            return res.status(200).json(rtn);
+
+        res.json(rtn);
+    } catch (err) {
+        return res.status(404).json({ err })
+    }
+}
+
+async function finishSolicitation(req, res) {
+    try {
+        let rtn = await repository.finishSolicitation(req.params.id, req.body);
 
         if (rtn.executionCode !== 0)
             return res.status(200).json(rtn);

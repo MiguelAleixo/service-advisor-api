@@ -99,8 +99,8 @@ AS $function$
  Ex................: SELECT * FROM public.selectService(3, 1);
  */
 BEGIN
-if pidcategory > 0 then
-RETURN QUERY select
+if pidcategory > 0 THEN
+RETURN QUERY SELECT
 	s.id_servico,
     s.nome,
     s.descricao,
@@ -112,11 +112,11 @@ RETURN QUERY select
     
 FROM
     public.tb_servico s
-    inner join tb_usuarios u on u.id_usr = s.id_usr 
-    inner join tb_categoria c on c.id_categoria = s.id_categoria 
-    inner join tb_tempo t on t.id_tempo = s.id_tempo 
-    inner join tb_valor v on v.id_valor = s.id_valor
-    where u.id_usr <> pIdUser and s.id_categoria = pidcategory;
+    INNER JOIN tb_usuarios u ON u.id_usr = s.id_usr 
+    INNER JOIN tb_categoria c ON c.id_categoria = s.id_categoria 
+    INNER JOIN tb_tempo t ON t.id_tempo = s.id_tempo 
+    INNER JOIN tb_valor v ON v.id_valor = s.id_valor
+    WHERE u.id_usr <> pIdUser AND s.id_categoria = pidcategory;
    
 else
 
@@ -181,5 +181,95 @@ $function$
 
 
 
+CREATE OR REPLACE FUNCTION public.selectservice(piduser integer, pidcategory integer)
+ RETURNS TABLE(id integer, name character varying, avaliation numeric, description character varying, img character varying, provider character varying, category character varying, "time" character varying, value character varying)
+ LANGUAGE plpgsql
+AS $function$ /*
+ Documentação
+ Arquivo Fonte.....: service.sql
+ Objetivo..........: Selecionar um serviço por ID
+ Autor.............: Miguel Aleixo
+ Data..............: 22/06/2020
+ Ex................: SELECT * FROM public.selectService(3, 1);
+ */
+begin 
+	if pidcategory > 0 then return QUERY
+select
+	s.id_servico,
+	s.nome,
+	coalesce(avg(a.avaliacao), 5.00) as av,
+	s.descricao,
+	s.imagem,
+	u.nome,
+	c.nome_categoria,
+	t.desc_tempo,
+	v.desc_valor
+from
+	tb_servico s
+left join tb_solicitacao_servico ss on
+	ss.id_servico = s.id_servico
+left join tb_avaliacoes a on
+	a.id_solicitacao_servico = ss.id_solicitacao_servico
+inner join tb_usuarios u on
+	u.id_usr = s.id_usr
+inner join tb_categoria c on
+	c.id_categoria = s.id_categoria
+inner join tb_tempo t on
+	t.id_tempo = s.id_tempo
+inner join tb_valor v on
+	v.id_valor = s.id_valor
+where
+	u.id_usr <> pIdUser
+	and s.id_categoria = pidcategory
+group by
+	s.id_servico,
+	s.nome,
+	u.nome,
+	c.nome_categoria,
+	t.desc_tempo,
+	v.desc_valor
+order by
+	av desc;
+else return QUERY
+select
+	s.id_servico,
+	s.nome,
+	coalesce(avg(a.avaliacao), 5.00) as av,
+	s.descricao,
+	s.imagem,
+	u.nome,
+	c.nome_categoria,
+	t.desc_tempo,
+	v.desc_valor
+from
+	tb_servico s
+left join tb_solicitacao_servico ss on
+	ss.id_servico = s.id_servico
+left join tb_avaliacoes a on
+	a.id_solicitacao_servico = ss.id_solicitacao_servico
+inner join tb_usuarios u on
+	u.id_usr = s.id_usr
+inner join tb_categoria c on
+	c.id_categoria = s.id_categoria
+inner join tb_tempo t on
+	t.id_tempo = s.id_tempo
+inner join tb_valor v on
+	v.id_valor = s.id_valor
+where
+	u.id_usr <> pIdUser
+group by
+	s.id_servico,
+	s.nome,
+	u.nome,
+	c.nome_categoria,
+	t.desc_tempo,
+	v.desc_valor
+order by
+	av desc;
+end if;
+end;
+
+$function$
+;
 
 
